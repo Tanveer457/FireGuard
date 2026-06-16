@@ -403,25 +403,141 @@ Copy `server/.env.example` to `server/.env` and fill in your values.
 
 ## Deployment
 
-### Windows — build the installer
+### Windows — Build the Installer (`.exe`)
+
+The project ships with a ready-made [PyInstaller spec](FireGuard_fixed.spec) and an [Inno Setup script](FireGuard_Setup.iss).
+
+#### Prerequisites
+- [PyInstaller](https://pyinstaller.org/) — `pip install pyinstaller` inside `server\venv`
+- [Inno Setup 6](https://jrsoftware.org/isinfo.php) — free download, install on Windows
+
+#### Step 1 — Activate the virtual environment
 
 ```powershell
-# Step 1 — compile to a single executable
-pyinstaller FireGuard_fixed.spec --noconfirm
-
-# Step 2 — package into an installer
-# Open FireGuard_Setup.iss in Inno Setup Compiler and press Ctrl+F9
-# Output: Output/FireGuard_Installer_v1.0.exe
+server\venv\Scripts\activate
 ```
 
-### Jetson — manage the systemd service
+#### Step 2 — Compile to a standalone folder with PyInstaller
+
+```powershell
+pyinstaller FireGuard_fixed.spec --noconfirm
+```
+
+This produces `dist\FireGuard\FireGuard.exe` — a fully self-contained folder with all Python dependencies bundled. The build spec automatically:
+- Collects all `server/` sub-packages and hidden imports (`fastapi`, `uvicorn`, `starlette`, `websockets`, `PySide6`, `paramiko`, `pyqtgraph`, `cv2`)
+- Bundles `server/assets/` (QSS themes, sounds)
+- Applies the red "F" icon (`fireguard.ico`)
+- Sets `console=False` for a clean windowless app
+
+> **Tip:** If you see `ModuleNotFoundError` at runtime, open `FireGuard_fixed.spec`, add the missing module to `hidden_imports`, and rebuild.
+
+#### Step 3 — Package into a professional installer with Inno Setup
+
+1. Open **Inno Setup Compiler** (installed in Step 0)
+2. Go to **File → Open** and select `FireGuard_Setup.iss`
+3. Press **Ctrl + F9** (or click **Build → Compile**)
+4. The finished installer is output to: `Output\FireGuard_Installer_v1.0.exe`
+
+The installer:
+- Installs FireGuard to `C:\Program Files\FireGuard\` by default
+- Creates Start Menu shortcuts and an optional Desktop shortcut
+- Bundles `JETSON_SETUP_GUIDE.txt` and shows it on install completion
+- Sets folder permissions so the app can write its SQLite database and logs
+- Excludes local `storage\` and `logs\` for a clean first-run experience
+
+#### Step 4 — Distribute
+
+Share `Output\FireGuard_Installer_v1.0.exe` with users or upload it to the [Releases](../../releases) page on GitHub. Users just double-click and run — no Python required.
+
+---
+
+### Jetson Nano — Run Edge as a Background Service
+
+The edge detection pipeline is designed to run as a **silent systemd service** that starts automatically on boot and restarts if it crashes.
+
+#### Option A: Automated install (recommended)
+
+Run the one-liner on the Jetson — it does everything automatically:
 
 ```bash
-sudo systemctl status  fireguard-edge   # Check if running
-sudo systemctl restart fireguard-edge   # Restart after config changes
-sudo systemctl stop    fireguard-edge   # Stop the service
-sudo journalctl -u fireguard-edge -f    # Stream live logs
+curl -sSL https://raw.githubusercontent.com/Tanveer457/FireGuard-/main/edge/install.sh | bash
 ```
+
+The script will:
+1. Update `apt` and install system dependencies (`git`, `python3-pip`, `libopencv-dev`)
+2. Verify CUDA / JetPack installation
+3. Install NVIDIA-optimised PyTorch (correct wheel for JetPack 4.6.1)
+4. Clone the repo into `~/fireguard/`
+5. Install Python requirements from `requirements.txt`
+6. Ask for your Windows PC IP address and update `config.yaml` automatically
+7. Write and register the `fireguard-edge.service` systemd unit
+8. Enable it on boot and start it immediately
+
+#### Option B: Manual systemd setup
+
+If you cloned the repo manually, create the service file yourself:
+
+```bash
+sudo nano /etc/systemd/system/fireguard-edge.service
+```
+
+Paste this (replace `/home/YOUR_USER/fireguard` with your actual path):
+
+```ini
+[Unit]
+Description=FireGuard Edge Detection Pipeline
+After=network.target
+
+[Service]
+WorkingDirectory=/home/YOUR_USER/fireguard/edge
+ExecStart=/usr/bin/python3 /home/YOUR_USER/fireguard/edge/main.py
+Restart=always
+RestartSec=10
+User=YOUR_USER
+Environment=PYTHONPATH=/home/YOUR_USER/fireguard/edge
+StandardOutput=append:/home/YOUR_USER/fireguard/edge/logs/service.log
+StandardError=append:/home/YOUR_USER/fireguard/edge/logs/service.log
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Then enable and start it:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable fireguard-edge   # Start on every boot
+sudo systemctl start  fireguard-edge   # Start right now
+```
+
+#### Managing the service day-to-day
+
+```bash
+sudo systemctl status  fireguard-edge        # Is it running?
+sudo systemctl restart fireguard-edge        # Restart after config changes
+sudo systemctl stop    fireguard-edge        # Stop the service
+sudo systemctl disable fireguard-edge        # Remove from boot
+
+# Live log streaming
+tail -f ~/fireguard/edge/logs/service.log
+# or via journald
+sudo journalctl -u fireguard-edge -f
+```
+
+#### Updating model weights on the Jetson
+
+```bash
+# Stop the service first
+sudo systemctl stop fireguard-edge
+
+# Replace the weights file
+cp /path/to/new_best.pt ~/fireguard/edge/best.pt
+
+# Restart
+sudo systemctl start fireguard-edge
+```
+
+> **Alternatively**, use the **Edge Configuration screen** in the desktop dashboard — it SSH-es into the Jetson, uploads a new `best.pt`, updates `config.yaml`, and restarts the service, all with one click.
 
 ---
 

@@ -40,7 +40,7 @@ fi
 
 # 5. Clone Repository
 # Note: User must replace YOUR_USERNAME and YOUR_REPO with actual values
-REPO_URL="https://github.com/YOUR_USERNAME/YOUR_REPO.git"
+REPO_URL="https://github.com/Tanveer457/FireGuard-.git"
 INSTALL_DIR="$HOME/fireguard"
 
 if [ -d "$INSTALL_DIR" ]; then
