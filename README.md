@@ -21,13 +21,14 @@
 </p>
 
 <p align="center">
-  <a href="#-overview">Overview</a> ·
-  <a href="#-architecture">Architecture</a> ·
-  <a href="#-demo">Demo</a> ·
-  <a href="#-model-performance">Model</a> ·
-  <a href="#-getting-started">Getting Started</a> ·
-  <a href="#-deployment">Deployment</a> ·
-  <a href="#-configuration">Configuration</a>
+  <a href="#overview">Overview</a> ·
+  <a href="#architecture">Architecture</a> ·
+  <a href="#demo">Demo</a> ·
+  <a href="#model-performance">Model</a> ·
+  <a href="#tech-stack">Tech Stack</a> ·
+  <a href="#getting-started">Getting Started</a> ·
+  <a href="#deployment">Deployment</a> ·
+  <a href="#configuration">Configuration</a>
 </p>
 
 ---
