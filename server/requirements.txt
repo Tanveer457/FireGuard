@@ -1,0 +1,43 @@
+# ══════════════════════════════════════════════
+# FireGuard Server Requirements (Industry Edition)
+# ══════════════════════════════════════════════
+
+# Core web framework
+fastapi>=0.115.0
+uvicorn[standard]>=0.29.0
+
+# WebSocket
+websockets>=12.0
+
+# Data validation
+pydantic>=2.10.0
+pydantic-settings>=2.5.0
+
+# HTTP client (health checks, async)
+httpx>=0.27.0
+
+# Image processing
+Pillow>=10.4.0
+opencv-python>=4.9.0
+
+# System monitoring
+psutil>=5.9.8
+
+# File utilities
+aiofiles>=23.2.1
+python-multipart>=0.0.9
+
+# YAML
+PyYAML>=6.0.1
+
+# SSH (Jetson management) — optional
+paramiko>=3.4.0
+
+# Charts — optional but recommended for Analytics screen
+pyqtgraph>=0.13.7
+
+# Environment variables
+python-dotenv>=1.0.1
+
+# Desktop UI Framework (AMD Realism)
+PySide6>=6.7.0

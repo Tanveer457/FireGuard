@@ -1,0 +1,193 @@
+# ============================================================
+#  FireGuard — .gitignore
+#  Keeps secrets, build artifacts, runtime data & large
+#  binary files out of version control.
+# ============================================================
+
+
+# ──────────────────────────────────────────────────────────
+# 1. ENVIRONMENT VARIABLES & SECRETS
+# ──────────────────────────────────────────────────────────
+.env
+.env.*
+*.env
+server/.env
+!.env.example          # allow a template/example file if you add one
+
+
+# ──────────────────────────────────────────────────────────
+# 2. PYTHON VIRTUAL ENVIRONMENTS
+# ──────────────────────────────────────────────────────────
+venv/
+.venv/
+env/
+server/venv/
+edge/edge_venv/
+**/venv/
+**/.venv/
+pyvenv.cfg
+
+
+# ──────────────────────────────────────────────────────────
+# 3. PYTHON CACHE & COMPILED FILES
+# ──────────────────────────────────────────────────────────
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+.Python
+
+
+# ──────────────────────────────────────────────────────────
+# 4. PYINSTALLER BUILD ARTIFACTS
+# ──────────────────────────────────────────────────────────
+build/
+dist/
+Output/
+*.spec.bak
+# Keep the .spec file — it is source-controlled config
+# !FireGuard_fixed.spec
+
+
+# ──────────────────────────────────────────────────────────
+# 5. INNO SETUP OUTPUT (large installer binary)
+# ──────────────────────────────────────────────────────────
+Output/FireGuard_Installer_v1.0.exe
+*.exe
+# If you want to keep the .iss script but not the binary:
+# !FireGuard_Setup.iss
+
+
+# ──────────────────────────────────────────────────────────
+# 6. DATABASES & PERSISTENT RUNTIME STORAGE
+# ──────────────────────────────────────────────────────────
+storage/
+server/storage/
+*.db
+*.sqlite
+*.sqlite3
+
+
+# ──────────────────────────────────────────────────────────
+# 7. LOG FILES
+# ──────────────────────────────────────────────────────────
+logs/
+server/logs/
+edge/logs/
+*.log
+*.log.*
+background_error.log
+background_out.log
+
+
+# ──────────────────────────────────────────────────────────
+# 8. ML MODEL WEIGHTS (large binary files — use Git LFS or
+#    a separate release instead)
+# ──────────────────────────────────────────────────────────
+*.pt
+*.pth
+*.onnx
+*.pb
+*.h5
+*.tflite
+*.weights
+# edge/best.pt is ~20 MB — excluded above; add via Git LFS
+# if you need it versioned:
+#   git lfs track "*.pt"
+
+
+# ──────────────────────────────────────────────────────────
+# 9. LARGE ZIP / ARCHIVE FILES
+# ──────────────────────────────────────────────────────────
+*.zip
+*.tar.gz
+*.tar.bz2
+*.rar
+*.7z
+# Specific ones found in the project:
+edge.zip
+server/screens.zip
+edge/stream.zip
+
+
+# ──────────────────────────────────────────────────────────
+# 10. JUPYTER NOTEBOOK CHECKPOINTS & OUTPUTS
+# ──────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+# The notebook itself is large (4 MB) due to cell outputs.
+# Optionally strip outputs before committing:
+# fire_detection_fixed_2_25.ipynb  ← uncomment to exclude
+
+
+# ──────────────────────────────────────────────────────────
+# 11. MEDIA / RUNTIME GENERATED FILES
+# ──────────────────────────────────────────────────────────
+storage/clips/
+storage/snapshots/
+storage/exports/
+edge/alerts/clips/
+edge/alerts/snapshots/
+edge/alert/
+*.mp4
+*.avi
+*.mkv
+*.mov
+*.jpg
+*.jpeg
+*.png
+*.gif
+# Exceptions — keep static UI assets
+!server/assets/**
+
+
+# ──────────────────────────────────────────────────────────
+# 12. MODEL TRAINING RUNS / YOLO OUTPUTS
+# ──────────────────────────────────────────────────────────
+# Ignore large training data, but KEEP result images & screenshots for README
+runs/
+wandb/
+# model/ folder — keep results & screenshots, exclude heavy files
+model/**/*.csv
+model/**/weights/
+model/**/*.pt
+
+
+# ──────────────────────────────────────────────────────────
+# 13. IDE & EDITOR FILES
+# ──────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.suo
+*.user
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+
+# ──────────────────────────────────────────────────────────
+# 14. OS-GENERATED FILES
+# ──────────────────────────────────────────────────────────
+desktop.ini
+ehthumbs.db
+$RECYCLE.BIN/
+
+
+# ──────────────────────────────────────────────────────────
+# 15. COVERAGE / TEST ARTIFACTS
+# ──────────────────────────────────────────────────────────
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+
+# ──────────────────────────────────────────────────────────
+# 16. MISC
+# ──────────────────────────────────────────────────────────
+*.bak
+*.tmp
+*.temp

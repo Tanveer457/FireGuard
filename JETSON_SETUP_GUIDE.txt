@@ -1,0 +1,67 @@
+================================================================================
+                    FIREGUARD — JETSON NANO SETUP GUIDE
+================================================================================
+
+This guide will help you set up your Jetson Nano as an AI Fire Detection Edge Node.
+
+--------------------------------------------------------------------------------
+STEP 1: HARDWARE PREREQUISITES
+--------------------------------------------------------------------------------
+1. Jetson Nano (4GB or 2GB Developer Kit).
+2. MicroSD Card (32GB minimum, Class 10/UHS-1 recommended).
+3. Power Supply (5V 4A via DC Barrel jack is recommended for performance).
+4. USB Webcam or Raspberry Pi Camera.
+
+--------------------------------------------------------------------------------
+STEP 2: FLASH THE SD CARD
+--------------------------------------------------------------------------------
+1. Download the official NVIDIA JetPack SD Card Image (Version 4.6.1+ recommended).
+2. Download 'BalenaEtcher' on your Windows PC.
+3. Insert your SD Card and use BalenaEtcher to 'Flash' the JetPack Image.
+
+--------------------------------------------------------------------------------
+STEP 3: FIRST BOOT & CUDA SETUP
+--------------------------------------------------------------------------------
+1. Insert the SD Card into the Jetson Nano.
+2. Connect a Monitor, Keyboard, and Mouse.
+3. Power on the Jetson and follow the Ubuntu setup wizard (Set your Username/Pass).
+4. **IMPORTANT**: Jetson Nano requires NVIDIA-specific versions of PyTorch and CUDA.
+   Our installer script will attempt to install these for you, but you must be
+   using official NVIDIA JetPack (Version 4.6.1 is strongly recommended).
+
+5. Verify CUDA is working by opening a Terminal and typing:
+   nvcc -V
+   
+   *If 'command not found', run these commands:
+   echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
+   echo 'export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH' >> ~/.bashrc
+   source ~/.bashrc
+
+--------------------------------------------------------------------------------
+STEP 4: INSTALL FIREGUARD EDGE SOFTWARE
+--------------------------------------------------------------------------------
+1. Ensure the Jetson Nano is connected to the Internet.
+2. Run the following command in the Terminal:
+   
+   mkdir -p ~/fireguard && cd ~/fireguard
+   curl -sSL https://raw.githubusercontent.com/YOUR_USERNAME/fireguard-edge/main/install.sh | bash
+
+   *This script will:
+   - Install System Libraries (OpenCV, etc.)
+   - Install NVIDIA-Optimized PyTorch (GPU enabled)
+   - Setup the 'fireguard-edge' background service
+
+3. During installation, you will be asked for:
+   - Your Windows PC IP Address (found in the FireGuard Windows App Settings).
+   - Your Edge Token (default: fire-secret-token).
+
+--------------------------------------------------------------------------------
+STEP 5: VERIFICATION
+--------------------------------------------------------------------------------
+Once the script finishes, it will start a background service. 
+- Open the FireGuard App on your Windows PC.
+- Go to the 'Dashboard' or 'Cameras' screen.
+- You should see your Jetson Nano appear as 'ONLINE' and the live feed appear.
+
+For support, visit: https://www.fireguard-systems.com/support
+================================================================================

@@ -1,0 +1,41 @@
+alert:
+  clip_duration_sec: 10
+  cooldown_sec: 10
+  min_consecutive: 10
+  save_clips: true
+  save_snapshots: true
+cameras:
+- id: 1
+  name: affan
+  url: rtsp://admin:affan1234@10.22.83.87:554/stream
+- id: 2
+  name: camera 0
+  url: 0
+model:
+  batch: 2
+  conf: 0.8
+  device: '0'
+  imgsz: 640
+  iou: 0.61
+  path: best.pt
+monitoring:
+  log_file: logs/edge.log
+  log_to_file: true
+  stats_interval_sec: 30
+server:
+  token: fire-secret-token
+  url: ws://127.0.0.1:8000/ws/edge
+storage:
+  clips_dir: alerts/clips
+  logs_dir: logs
+  max_clips: 100
+  max_snapshots: 500
+  snapshots_dir: alerts/snapshots
+stream:
+  buffer_size: 10
+  reconnect_sec: 5
+  stale_frame_sec: 5
+  vid_stride: 2
+transmission:
+  interval_ms: 500
+  jpeg_quality: 60
