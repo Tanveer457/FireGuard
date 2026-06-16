@@ -461,7 +461,7 @@ The edge detection pipeline is designed to run as a **silent systemd service** t
 Run the one-liner on the Jetson — it does everything automatically:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/Tanveer457/FireGuard-/main/edge/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/Tanveer457/FireGuard/main/edge/install.sh | bash
 ```
 
 The script will:
