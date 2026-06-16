@@ -439,4 +439,5 @@ sudo journalctl -u fireguard-edge -f    # Stream live logs
 
 <p align="center">
   <sub>FireGuard — built for real-world fire safety. ⭐ Star the repo if you found it useful.</sub>
+  <sub>Built by Tanveer Younas & Team.</sub>
 </p>
