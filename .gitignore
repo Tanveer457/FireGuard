@@ -123,7 +123,7 @@ edge/stream.zip
 
 
 # ──────────────────────────────────────────────────────────
-# 11. MEDIA / RUNTIME GENERATED FILES
+# 11. MEDIA / RUNTIME GENERATED FILES  (scope to runtime dirs only)
 # ──────────────────────────────────────────────────────────
 storage/clips/
 storage/snapshots/
@@ -131,16 +131,20 @@ storage/exports/
 edge/alerts/clips/
 edge/alerts/snapshots/
 edge/alert/
-*.mp4
-*.avi
-*.mkv
-*.mov
-*.jpg
-*.jpeg
-*.png
-*.gif
-# Exceptions — keep static UI assets
-!server/assets/**
+# Only exclude video/image files inside runtime storage dirs
+storage/**/*.mp4
+storage/**/*.avi
+storage/**/*.mkv
+storage/**/*.mov
+storage/**/*.jpg
+storage/**/*.jpeg
+storage/**/*.png
+edge/alerts/**/*.mp4
+edge/alerts/**/*.avi
+edge/alerts/**/*.jpg
+edge/alerts/**/*.jpeg
+edge/alerts/**/*.png
+# NOTE: *.jpg / *.png are NOT globally excluded — model screenshots must be tracked
 
 
 # ──────────────────────────────────────────────────────────
@@ -149,10 +153,16 @@ edge/alert/
 # Ignore large training data, but KEEP result images & screenshots for README
 runs/
 wandb/
-# model/ folder — keep results & screenshots, exclude heavy files
+# model/ folder — keep result PNGs/JPGs for README, exclude heavy files only
 model/**/*.csv
 model/**/weights/
 model/**/*.pt
+
+
+# ──────────────────────────────────────────────────────────
+# 17. INTERNAL AI ASSISTANT FILES (not for public repo)
+# ──────────────────────────────────────────────────────────
+GEMINI.md
 
 
 # ──────────────────────────────────────────────────────────
