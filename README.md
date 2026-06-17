@@ -51,32 +51,63 @@ The system is designed for real environments: warehouses, server rooms, industri
 
 ## Architecture
 
-```
-  ┌─────────────────────────────────────────────────────────────────┐
-  │                         FireGuard System                        │
-  │                                                                 │
-  │   📷 IP Cameras (RTSP)  /  USB Webcams                         │
-  │              │                                                  │
-  │              ▼                                                  │
-  │   ┌──────────────────────┐                                      │
-  │   │     Edge Node        │  YOLOv26s inference (GPU/CPU)       │
-  │   │  Jetson / Linux PC   │  Frame buffering & alert packaging  │
-  │   │                      │  Snapshot & clip storage            │
-  │   └──────────┬───────────┘                                      │
-  │              │  WebSocket  (JSON payload + Base64 JPEG)         │
-  │              ▼                                                  │
-  │   ┌──────────────────────┐                                      │
-  │   │   FastAPI Server     │  Alert persistence (SQLite WAL)     │
-  │   │   Central Hub        │  System health aggregation          │
-  │   │                      │  WebSocket broadcast to UI          │
-  │   └──────────┬───────────┘                                      │
-  │              │                                                  │
-  │              ▼                                                  │
-  │   ┌──────────────────────┐                                      │
-  │   │  Desktop Dashboard   │  Home · Cameras · Alerts · Analytics│
-  │   │  PySide6 · Windows   │  Audio alarm · Remote Jetson SSH    │
-  │   └──────────────────────┘                                      │
-  └─────────────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    classDef default fill:#1E1E1E,stroke:#333,stroke-width:2px,color:#fff;
+    classDef edge fill:#1565C0,stroke:#0D47A1,stroke-width:2px,color:#fff;
+    classDef server fill:#6A1B9A,stroke:#4A148C,stroke-width:2px,color:#fff;
+    classDef ui fill:#2E7D32,stroke:#1B5E20,stroke-width:2px,color:#fff;
+    classDef camera fill:#E65100,stroke:#BF360C,stroke-width:2px,color:#fff;
+    classDef db fill:#00695C,stroke:#004D40,stroke-width:2px,color:#fff;
+
+    subgraph Sources["📷 Video Sources"]
+        C1["IP Cameras (RTSP)"]:::camera
+        C2["USB Webcams"]:::camera
+    end
+
+    subgraph EdgeNode["⚙️ Edge Node (NVIDIA Jetson / Linux PC)"]
+        direction TB
+        Capture["OpenCV VideoCapture"]:::edge
+        YOLO["YOLOv26s Inference (GPU/CPU)"]:::edge
+        Logic["Frame Buffering & Alert Logic"]:::edge
+        Storage1["Snapshot & Clip Storage"]:::db
+        WS_Client["WebSocket Client"]:::edge
+
+        Capture -->|Raw Frames| YOLO
+        YOLO -->|Detections| Logic
+        Logic -->|Save| Storage1
+        Logic -->|Package Payload| WS_Client
+    end
+
+    subgraph CentralServer["🌐 Central Hub (FastAPI Server)"]
+        direction TB
+        WS_Server["WebSocket Server"]:::server
+        AlertProc["Alert Processor & Health Aggregation"]:::server
+        SQLite[("SQLite Database\n(WAL Mode)")]:::db
+        WS_Broadcaster["WebSocket Broadcaster"]:::server
+
+        WS_Server -->|Receive JSON+JPEG| AlertProc
+        AlertProc -->|Persist Data| SQLite
+        AlertProc -->|Forward Alerts| WS_Broadcaster
+    end
+
+    subgraph DesktopApp["💻 Desktop Dashboard (PySide6 / Windows)"]
+        direction TB
+        UI["PySide6 Dashboard UI"]:::ui
+        PyQtGraph["Real-time Analytics Charts"]:::ui
+        Audio["Audio Alarms"]:::ui
+        SSH["Remote Jetson SSH Manager"]:::ui
+        
+        UI --- PyQtGraph
+        UI --- Audio
+        UI --- SSH
+    end
+
+    C1 -->|RTSP Stream| Capture
+    C2 -->|USB Stream| Capture
+    WS_Client -->|WebSocket (500ms intervals)| WS_Server
+    WS_Broadcaster -->|WebSocket Broadcast| UI
+    SSH -.->|SSH Commands\nConfig Deploy & Restart| EdgeNode
 ```
 
 **Data pipeline at a glance:**
