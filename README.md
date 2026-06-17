@@ -105,9 +105,9 @@ graph TD
 
     C1 -->|RTSP Stream| Capture
     C2 -->|USB Stream| Capture
-    WS_Client -->|WebSocket (500ms intervals)| WS_Server
+    WS_Client -->|"WebSocket (500ms intervals)"| WS_Server
     WS_Broadcaster -->|WebSocket Broadcast| UI
-    SSH -.->|SSH Commands\nConfig Deploy & Restart| EdgeNode
+    SSH -.->|"SSH Commands<br>Config Deploy & Restart"| EdgeNode
 ```
 
 **Data pipeline at a glance:**
