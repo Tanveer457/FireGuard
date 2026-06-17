@@ -332,7 +332,7 @@ Download `FireGuard_Installer_v1.0.exe` from the [Releases](../../releases) page
 **Option 2: Run from source**
 
 ```powershell
-git clone https://github.com/YOUR_USERNAME/FireGuard.git
+git clone https://github.com/Tanveer457/FireGuard.git
 cd FireGuard
 
 python -m venv server\venv
@@ -355,7 +355,7 @@ The FastAPI server starts on `http://localhost:8000` and the desktop dashboard o
 **One-line install**
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/YOUR_USERNAME/FireGuard/main/edge/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/Tanveer457/FireGuard/main/edge/install.sh | bash
 ```
 
 This script installs NVIDIA-optimized PyTorch, all Python dependencies, and registers a `systemd` service that starts the detection pipeline automatically on boot.
@@ -363,7 +363,7 @@ This script installs NVIDIA-optimized PyTorch, all Python dependencies, and regi
 **Manual setup**
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/FireGuard.git
+git clone https://github.com/Tanveer457/FireGuard.git
 cd FireGuard/edge
 
 python3 -m venv edge_venv

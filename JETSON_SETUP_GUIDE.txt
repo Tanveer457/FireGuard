@@ -44,7 +44,7 @@ STEP 4: INSTALL FIREGUARD EDGE SOFTWARE
 2. Run the following command in the Terminal:
    
    mkdir -p ~/fireguard && cd ~/fireguard
-   curl -sSL https://raw.githubusercontent.com/YOUR_USERNAME/fireguard-edge/main/install.sh | bash
+   curl -sSL https://raw.githubusercontent.com/Tanveer457/FireGuard/main/edge/install.sh | bash
 
    *This script will:
    - Install System Libraries (OpenCV, etc.)
