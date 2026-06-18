@@ -17,7 +17,6 @@
   <img src="https://img.shields.io/badge/FastAPI-WebSocket-009688?style=flat-square&logo=fastapi&logoColor=white" alt="FastAPI"/>
   <img src="https://img.shields.io/badge/NVIDIA-Jetson%20Edge-76B900?style=flat-square&logo=nvidia&logoColor=white" alt="Jetson"/>
   <img src="https://img.shields.io/badge/mAP%4050-80.48%25-brightgreen?style=flat-square" alt="mAP"/>
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="License"/>
 </p>
 
 <p align="center">
